@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import Icon from '@/components/ui/icon';
 
 const nftGifts = [
@@ -111,6 +112,7 @@ const Index = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [selectedGift, setSelectedGift] = useState<typeof nftGifts[0] | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const filteredGifts = selectedCategory === 'Все' 
     ? nftGifts 
@@ -168,15 +170,96 @@ const Index = () => {
               </Button>
             </nav>
 
-            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 animate-glow">
-              <Icon name="Send" size={18} className="mr-2" />
-              Отправить подарок
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button className="hidden md:flex bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 animate-glow">
+                <Icon name="Send" size={18} className="mr-2" />
+                Отправить подарок
+              </Button>
+
+              <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="md:hidden">
+                    <Icon name="Menu" size={24} />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                  <SheetHeader>
+                    <SheetTitle className="flex items-center gap-2">
+                      <div className="text-3xl">🎁</div>
+                      <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent">
+                        Меню
+                      </span>
+                    </SheetTitle>
+                  </SheetHeader>
+                  
+                  <nav className="flex flex-col gap-4 mt-8">
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start text-lg h-14 hover-scale"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Icon name="Home" size={22} className="mr-3" />
+                      Главная
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start text-lg h-14 hover-scale"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Icon name="Grid2x2" size={22} className="mr-3" />
+                      Каталог
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start text-lg h-14 hover-scale"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Icon name="TrendingUp" size={22} className="mr-3" />
+                      Топ
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start text-lg h-14 hover-scale"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Icon name="Layers" size={22} className="mr-3" />
+                      Коллекции
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start text-lg h-14 hover-scale"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Icon name="User" size={22} className="mr-3" />
+                      Профиль
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start text-lg h-14 hover-scale"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Icon name="HelpCircle" size={22} className="mr-3" />
+                      Помощь
+                    </Button>
+
+                    <Separator className="my-4" />
+
+                    <Button 
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 h-14 text-lg animate-glow"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Icon name="Send" size={22} className="mr-2" />
+                      Отправить подарок
+                    </Button>
+                  </nav>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-8 md:py-12">
         <section className="mb-16 animate-fade-in">
           <div className="text-center mb-12">
             <h2 className="text-5xl md:text-6xl font-black mb-4 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent animate-scale-in">
