@@ -3,6 +3,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
 
 const nftGifts = [
@@ -15,7 +17,12 @@ const nftGifts = [
     reviews: 234,
     category: 'Популярное',
     rarity: 'Эпический',
-    trending: true
+    trending: true,
+    description: 'Эксклюзивный звёздный подарок с волшебным сиянием. Идеален для особых событий и празднований.',
+    collection: 'Звёздная серия',
+    creator: '@star_gifts',
+    editions: 500,
+    owned: 234
   },
   {
     id: 2,
@@ -26,7 +33,12 @@ const nftGifts = [
     reviews: 567,
     category: 'Топ',
     rarity: 'Легендарный',
-    trending: true
+    trending: true,
+    description: 'Редчайший кристалл, приносящий удачу владельцу. Сияет всеми цветами радуги.',
+    collection: 'Магические артефакты',
+    creator: '@magic_nft',
+    editions: 100,
+    owned: 89
   },
   {
     id: 3,
@@ -37,7 +49,12 @@ const nftGifts = [
     reviews: 189,
     category: 'Коллекции',
     rarity: 'Редкий',
-    trending: false
+    trending: false,
+    description: 'Стильный премиум значок для истинных ценителей NFT. Подчеркнёт ваш статус.',
+    collection: 'Премиум коллекция',
+    creator: '@premium_badges',
+    editions: 300,
+    owned: 189
   },
   {
     id: 4,
@@ -48,7 +65,12 @@ const nftGifts = [
     reviews: 412,
     category: 'Популярное',
     rarity: 'Обычный',
-    trending: false
+    trending: false,
+    description: 'Загадочный куб с бесконечными гранями. Отличный подарок для друзей.',
+    collection: 'Геометрия',
+    creator: '@cube_master',
+    editions: 1000,
+    owned: 412
   },
   {
     id: 5,
@@ -59,7 +81,12 @@ const nftGifts = [
     reviews: 892,
     category: 'Топ',
     rarity: 'Мифический',
-    trending: true
+    trending: true,
+    description: 'Легендарный золотой трофей для чемпионов. Самый престижный подарок в коллекции.',
+    collection: 'Чемпионы',
+    creator: '@trophy_legends',
+    editions: 50,
+    owned: 50
   },
   {
     id: 6,
@@ -70,13 +97,20 @@ const nftGifts = [
     reviews: 301,
     category: 'Коллекции',
     rarity: 'Редкий',
-    trending: false
+    trending: false,
+    description: 'Яркая неоновая звезда, светящаяся в темноте. Создаёт волшебную атмосферу.',
+    collection: 'Неоновые сны',
+    creator: '@neon_dreams',
+    editions: 200,
+    owned: 156
   }
 ];
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState('Все');
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [selectedGift, setSelectedGift] = useState<typeof nftGifts[0] | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const filteredGifts = selectedCategory === 'Все' 
     ? nftGifts 
@@ -195,6 +229,10 @@ const Index = () => {
                     style={{ animationDelay: `${index * 0.1}s` }}
                     onMouseEnter={() => setHoveredCard(gift.id)}
                     onMouseLeave={() => setHoveredCard(null)}
+                    onClick={() => {
+                      setSelectedGift(gift);
+                      setIsDialogOpen(true);
+                    }}
                   >
                     <div className="relative overflow-hidden">
                       {gift.trending && (
@@ -322,6 +360,158 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedGift && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-3xl font-black bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent">
+                  {selectedGift.name}
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="grid md:grid-cols-2 gap-8 mt-6">
+                <div>
+                  <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100 animate-glow">
+                    <img 
+                      src={selectedGift.image} 
+                      alt={selectedGift.name}
+                      className="w-full h-full object-cover animate-float"
+                    />
+                    <div className={`absolute top-4 left-4 ${getRarityColor(selectedGift.rarity)} text-white text-sm px-4 py-2 rounded-full font-bold`}>
+                      {selectedGift.rarity}
+                    </div>
+                    {selectedGift.trending && (
+                      <Badge className="absolute top-4 right-4 bg-gradient-to-r from-orange-500 to-pink-500">
+                        <Icon name="TrendingUp" size={14} className="mr-1" />
+                        Trending
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="mt-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-1">Цена</p>
+                        <p className="text-3xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                          {selectedGift.price}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground mb-1">Доступно</p>
+                        <p className="text-xl font-bold">
+                          {selectedGift.editions - selectedGift.owned} / {selectedGift.editions}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 w-full">
+                        <Icon name="ShoppingCart" size={18} className="mr-2" />
+                        Купить
+                      </Button>
+                      <Button variant="outline" className="w-full">
+                        <Icon name="Send" size={18} className="mr-2" />
+                        Отправить
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="font-bold text-lg mb-2">Описание</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {selectedGift.description}
+                    </p>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Коллекция</span>
+                      <span className="font-semibold">{selectedGift.collection}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Создатель</span>
+                      <span className="font-semibold text-purple-600">{selectedGift.creator}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Категория</span>
+                      <Badge variant="outline">{selectedGift.category}</Badge>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-lg">Рейтинг</h3>
+                      <div className="flex items-center gap-2">
+                        <Icon name="Star" size={20} className="text-yellow-500 fill-yellow-500" />
+                        <span className="text-2xl font-bold">{selectedGift.rating}</span>
+                        <span className="text-muted-foreground">/ 5</span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      {[5, 4, 3, 2, 1].map(stars => {
+                        const percentage = stars === 5 ? 70 : stars === 4 ? 20 : stars === 3 ? 7 : stars === 2 ? 2 : 1;
+                        return (
+                          <div key={stars} className="flex items-center gap-3">
+                            <div className="flex items-center gap-1 w-16">
+                              <span className="text-sm">{stars}</span>
+                              <Icon name="Star" size={14} className="text-yellow-500" />
+                            </div>
+                            <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-gradient-to-r from-purple-600 to-pink-600"
+                                style={{ width: `${percentage}%` }}
+                              />
+                            </div>
+                            <span className="text-sm text-muted-foreground w-12 text-right">{percentage}%</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="mt-4 p-4 bg-purple-50 rounded-lg">
+                      <p className="text-sm text-muted-foreground">
+                        <Icon name="Users" size={16} className="inline mr-1" />
+                        {selectedGift.reviews} человек уже получили этот подарок
+                      </p>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="grid grid-cols-3 gap-3">
+                    <Card className="p-3 text-center">
+                      <Icon name="Eye" size={20} className="mx-auto mb-2 text-purple-600" />
+                      <p className="text-xs text-muted-foreground">Просмотры</p>
+                      <p className="font-bold text-sm">12.5K</p>
+                    </Card>
+                    <Card className="p-3 text-center">
+                      <Icon name="Heart" size={20} className="mx-auto mb-2 text-pink-600" />
+                      <p className="text-xs text-muted-foreground">Избранное</p>
+                      <p className="font-bold text-sm">3.2K</p>
+                    </Card>
+                    <Card className="p-3 text-center">
+                      <Icon name="Share2" size={20} className="mx-auto mb-2 text-orange-600" />
+                      <p className="text-xs text-muted-foreground">Отправлено</p>
+                      <p className="font-bold text-sm">{selectedGift.owned}</p>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
